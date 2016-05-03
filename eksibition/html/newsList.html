@@ -1,0 +1,119 @@
+<html>
+	<head>
+	<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<style type="text/css">
+		.bs-callout {
+		    padding: 40px;
+		    margin: 20px 0;
+		    border: 1px solid #eee;
+		    border-left-width: 5px;
+		    border-radius: 3px;
+		}
+		.bs-callout h4 {
+		    margin-top: 0;
+		    margin-bottom: 5px;
+		}
+		.bs-callout p:last-child {
+		    margin-bottom: 0;
+		}
+		.bs-callout code {
+		    border-radius: 3px;
+		}
+		.bs-callout+.bs-callout {
+		    margin-top: -5px;
+		}
+		.bs-callout-default {
+		    border-left-color: #777;
+		}
+		.bs-callout-default h4 {
+		    color: #777;
+		}
+		.bs-callout-primary {
+		    border-left-color: #428bca;
+		}
+		.bs-callout-primary h4 {
+		    color: #428bca;
+		}
+		.bs-callout-success {
+		    border-left-color: #5cb85c;
+		}
+		.bs-callout-success h4 {
+		    color: #5cb85c;
+		}
+		.bs-callout-danger {
+		    border-left-color: #d9534f;
+		}
+		.bs-callout-danger h4 {
+		    color: #d9534f;
+		}
+		.bs-callout-warning {
+		    border-left-color: #f0ad4e;
+		}
+		.bs-callout-warning h4 {
+		    color: #f0ad4e;
+		}
+		.bs-callout-info {
+		    border-left-color: #5bc0de;
+		}
+		.bs-callout-info h4 {
+		    color: #5bc0de;
+		}
+		.content-body {
+			padding: 20px;
+		}
+		</style>
+	</head>
+	<script type="text/javascript">
+	window.onload = function(){
+		var newsContainer = document.getElementById("newsContainer");
+		var xhr = new XMLHttpRequest();
+		xhr.onreadystatechange = function() {
+		    if (xhr.readyState == XMLHttpRequest.DONE) {
+		    	// console.log(JSON.parse(xhr.response));
+		    	var newsList = JSON.parse(xhr.response);
+		        updateNews(newsContainer, newsList);
+		    }
+		}
+		xhr.open('GET', 'https://elvinjin.com:8081/api/news/update/1453362508000', true);
+		xhr.send();
+	};
+	function updateNews(container, newsList){
+		for(var i = 0; i < newsList.length; i++){
+			appendNews(container, newsList[i].title, newsList[i].image, newsList[i].newsId);
+		}
+	}
+	function appendNews(container, title, image, id){
+		var element = document.createElement('div');
+		element.className = "bs-callout ";
+		element.id = id;
+		var header = document.createElement('h4');
+		var newContent = document.createTextNode(title);
+		var imageURL = getImageURL(image);
+		element.style.backgroundImage = 'url(' + imageURL + ')';
+  		header.appendChild(newContent);
+  		element.appendChild(header);
+  		element.onclick = function(){
+  			newsClicked(element.id);
+  		};
+  		container.appendChild(element);
+	}
+	function getImageURL(image){
+		return 'https://elvinjin.com:8081' + image;
+	}
+	function newsClicked(id){
+		window.location = "https://elvinjin.com:8081/newsDetail/" + id;
+	}
+	</script>
+	<body>
+	<div class="container" id="newsContainer">
+		<h1>News List</h1>
+		<p>Select an existing news to push.</p>
+	<div/>
+	</body>
+</html>

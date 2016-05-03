@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en" class="no-js">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<meta name="theme-color" content="#3e454c">
+	
+	<title>Eksibition - Items</title>
+
+	<!-- Font awesome -->
+	<link rel="stylesheet" href="css/font-awesome.min.css">
+	<!-- Sandstone Bootstrap CSS -->
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<!-- Bootstrap Datatables -->
+	<link rel="stylesheet" href="css/dataTables.bootstrap.min.css">
+	<!-- Bootstrap social button library -->
+	<link rel="stylesheet" href="css/bootstrap-social.css">
+	<!-- Bootstrap select -->
+	<link rel="stylesheet" href="css/bootstrap-select.css">
+	<!-- Bootstrap file input -->
+	<link rel="stylesheet" href="css/fileinput.min.css">
+	<!-- Awesome Bootstrap checkbox -->
+	<link rel="stylesheet" href="css/awesome-bootstrap-checkbox.css">
+	<!-- Admin Stye -->
+	<link rel="stylesheet" href="css/style.css">
+
+	<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+	      #map {
+	        height: 500px;
+		    background-color: #CCC;
+		    margin-top: 30px;
+	      }
+	      #itemPanel {
+	      	margin-top: 30px;
+	      }
+	</style>
+
+</head>
+
+<body>
+	<div class="brand clearfix">
+		<a href="index.html" class="logo"><img src="img/logo.jpg" class="img-responsive" alt=""></a>
+		<span class="menu-btn"><i class="fa fa-bars"></i></span>
+		<ul class="ts-profile-nav">
+			<li class="ts-account">
+				<a href="#"><img src="img/ts-avatar.jpg" class="ts-avatar hidden-side" alt=""> Account <i class="fa fa-angle-down hidden-side"></i></a>
+				<ul>
+					<li><a href="#">My Account</a></li>
+					<li><a href="#">Edit Account</a></li>
+					<li><a href="#">Logout</a></li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+
+	<div class="ts-main-content">
+		<nav class="ts-sidebar">
+			<ul class="ts-sidebar-menu">
+				<li class="ts-label">Main</li>
+				<li class=""><a href="home"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+				<li class="open"><a href="itemList"><i class="fa fa-bars"></i> Items</a></li>
+				<li class=""><a href="user"><i class="fa fa-users"></i> Users</a></li>
+				<li class=""><a href="order"><i class="fa fa-sticky-note"></i> Orders</a></li>
+				<li class=""><a href="newsList"><i class="fa fa-newspaper-o"></i> News</a></li>
+
+				<!-- Account from above -->
+				<ul class="ts-profile-nav">
+					<li><a href="#">Help</a></li>
+					<li><a href="#">Settings</a></li>
+					<li class="ts-account">
+						<a href="#"><img src="img/ts-avatar.jpg" class="ts-avatar hidden-side" alt=""> Account <i class="fa fa-angle-down hidden-side"></i></a>
+						<ul>
+							<li><a href="#">My Account</a></li>
+							<li><a href="#">Edit Account</a></li>
+							<li><a href="#">Logout</a></li>
+						</ul>
+					</li>
+				</ul>
+
+			</ul>
+		</nav>
+		<div class="content-wrapper">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12">
+						<h2 class="page-title" id="pageTitle">All Items</h2>
+						<div id="mainContent">
+							<div class="container">
+								<p>You can see all the items in the map. Click to edit them.</p>
+								<a href="addItem" type="button" class="btn btn-primary ">Add New Item</a>
+								<div id="map"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+									<div class="panel panel-default" id="itemPanel">
+										<div class="panel-heading">Item Data</div>
+										<div class="panel-body">
+											<table class="table table-hover">
+												<thead>
+													<tr>
+														<th>#</th>
+														<th>title</th>
+														<th>author</th>
+														<th>likes</th>
+														<th>shares</th>
+													</tr>
+												</thead>
+												<tbody id="itemTableBody">
+													
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<!-- Loading Scripts -->
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap-select.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/jquery.dataTables.min.js"></script>
+	<script src="js/dataTables.bootstrap.min.js"></script>
+	<script src="js/Chart.min.js"></script>
+	<script src="js/fileinput.js"></script>
+	<script src="js/chartData.js"></script>
+	<script src="js/main.js"></script>
+	<script src="https://maps.googleapis.com/maps/api/js" async defer></script>
+	<script>
+	var infowindowList = new Array(); 
+	window.onload = function(){
+		initMap();
+	}
+
+	function initMap(){
+	  	var mapDiv = document.getElementById('map');
+	  	var myLatLng = {lat: 22.419066, lng: 114.207126};
+        var map = new google.maps.Map(mapDiv, {
+          center: {lat: 22.419066, lng: 114.207126},
+          zoom: 16
+        });
+		loadItems(map);
+	  }
+	function loadItems(map){
+	  	var xhr = new XMLHttpRequest();
+		xhr.onreadystatechange = function() {
+		    if (xhr.readyState == XMLHttpRequest.DONE) {
+		    	// console.log(JSON.parse(xhr.response));
+		    	var itemList = JSON.parse(xhr.response);
+		    	console.log(itemList);
+		        updateMap(map, itemList);
+		        updatePanel(itemList);
+		    }
+		}
+		xhr.open('GET', 'https://elvinjin.com:8081/api/item/itemList', true);
+		xhr.send();
+	}
+
+	function updateMap(map, itemList){
+	  	for(var i = 0; i < itemList.length; i++){
+	  		var pos = {lat:itemList[i].lat, lng:itemList[i].lng};
+	  		var title = itemList[i].title;
+	  		var _id = itemList[i]._id;
+	  		console.log("item no. " + i + ", title: " + title);
+	  		var marker = new google.maps.Marker({
+	  			position: pos,
+	  			map: map,
+	  			title: title,
+	  			index: i,
+	  			_id: _id
+	  		});
+			var infowindow = new google.maps.InfoWindow({
+				content: title,
+				map: map,
+				position: pos
+			});
+			infowindowList.push(infowindow);
+			infowindow.close();
+	  		marker.addListener('mouseover', function(){
+	  			infowindowList[this.index].open(map, this);
+	  		});
+	  		marker.addListener('mouseout', function() {
+			    infowindowList[this.index].close();
+			});
+	  		marker.addListener('click', function() {
+	  			window.location.href = "https://elvinjin.com:8081/panel/editItem?id=" + this._id;
+	  		});
+	  	}
+	}
+
+	function updatePanel(itemList){
+		var tbody = document.getElementById('itemTableBody');
+		        	for(var i = 0; i < itemList.length; i++){
+		        		var tr = document.createElement('tr');
+		        		var th = document.createElement('th');
+		        		th.scope = "row";
+		        		th.innerHTML = i+1;
+		        		var title = document.createElement('td');
+		        		title.innerHTML = itemList[i].title;
+		        		var author = document.createElement('td');
+		        		author.innerHTML = itemList[i].author;
+		        		var likes = document.createElement('td');
+		        		likes.innerHTML = itemList[i].likes.length;
+		        		var shares = document.createElement('td');
+		        		shares.innerHTML = itemList[i].shareCount;
+		        		tr.appendChild(th);
+		        		tr.appendChild(title);
+		        		tr.appendChild(author);
+		        		tr.appendChild(likes);
+		        		tr.appendChild(shares);
+		        		tbody.appendChild(tr);
+		        	}
+	}
+
+	function jumpToLogin(){
+		window.location.replace('https://elvinjin.com:8081/panel/login');
+	}
+	</script>
+
+</body>
+
+</html>

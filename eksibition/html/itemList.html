@@ -1,0 +1,96 @@
+<html>
+	<head>
+	<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+		<script src="https://maps.googleapis.com/maps/api/js?callback=initMap" async defer></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<style>
+	      #map {
+	        height: 500px;
+		    background-color: #CCC;
+	      }
+    	</style>
+    	<script>
+    	var infowindowList = new Array(); 
+		function initMap(){
+		  	var mapDiv = document.getElementById('map');
+		  	var myLatLng = {lat: 22.419066, lng: 114.207126};
+	        var map = new google.maps.Map(mapDiv, {
+	          center: {lat: 22.419066, lng: 114.207126},
+	          zoom: 16
+	        });
+	  //       var marker = new google.maps.Marker({
+			//     position: myLatLng,
+			//     map: map,
+			//     draggable: true,
+			//     title: 'Target'
+			// });
+			// var inputLat = document.getElementById('lat');
+			// var inputLng = document.getElementById('lng');
+			// inputLat.value = myLatLng.lat;
+			// inputLng.value = myLatLng.lng;
+			// marker.addListener('drag', function(){
+			// 	inputLat.value = marker.getPosition().lat();
+			// 	inputLng.value = marker.getPosition().lng();
+			// });
+			loadItems(map);
+		  }
+		  function loadItems(map){
+		  	var xhr = new XMLHttpRequest();
+			xhr.onreadystatechange = function() {
+			    if (xhr.readyState == XMLHttpRequest.DONE) {
+			    	// console.log(JSON.parse(xhr.response));
+			    	var itemList = JSON.parse(xhr.response);
+			        updateMap(map, itemList);
+			    }
+			}
+			xhr.open('GET', 'https://elvinjin.com:8081/api/item/itemList', true);
+			xhr.send();
+		  }
+
+		  function updateMap(map, itemList){
+		  	for(var i = 0; i < itemList.length; i++){
+		  		var pos = {lat:itemList[i].lat, lng:itemList[i].lng};
+		  		var title = itemList[i].title;
+		  		var _id = itemList[i]._id;
+		  		console.log("item no. " + i + ", title: " + title);
+		  		var marker = new google.maps.Marker({
+		  			position: pos,
+		  			map: map,
+		  			title: title,
+		  			index: i,
+		  			_id: _id
+		  		});
+				var infowindow = new google.maps.InfoWindow({
+					content: title,
+					map: map,
+					position: pos
+				});
+				infowindowList.push(infowindow);
+				infowindow.close();
+		  		marker.addListener('mouseover', function(){
+		  			infowindowList[this.index].open(map, this);
+		  		});
+		  		marker.addListener('mouseout', function() {
+				    infowindowList[this.index].close();
+				});
+		  		marker.addListener('click', function() {
+		  			window.location.href = "https://elvinjin.com:8081/editItem/" + this._id;
+		  		});
+		  	}
+		  }
+		</script>
+	</head>
+
+	<body>
+		<div class="container">
+			<h2>View All Items</h2>
+			<p>You can see all the items in the map. Click to edit them.</p>
+			<div id="map"></div>
+		</div>
+	</body>
+</html>

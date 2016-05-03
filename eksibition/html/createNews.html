@@ -1,0 +1,39 @@
+<html>
+	<head>
+	<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	</head>
+
+	<body>
+		<div class="container">
+			<h2>Push News Notification</h2>
+			<p>Create a new piece of news and set the push time.</p>
+			<form role="form" method="post" enctype="multipart/form-data" action="https://elvinjin.com:8081/api/news/add">
+			<div class="form-group">
+			  <label >News Title:</label>
+			  <input type="text" class="form-control" name="title">
+			</div>
+			<div class="form-group">
+				<label>Cover Image:</label><br/>
+				<img class="img-rounded"><br/>
+				<input type="file" accept="image/gif, image/jpeg, image/png" id="selectImage" name="image"></input>
+			</div>
+			<div class="form-group">
+			  <label >News Content:</label>
+			  <textarea type="text" class="form-control" rows="10" name="content"></textarea>
+			</div>
+			<div class="form-group">
+			  <label >Push Time:</label><br/>
+			  <label><input type="radio" name="push_now">NOW</label><br/>
+			  <label><input type="radio" name="push_now">LATER</label>
+			</div>
+			<input class="btn btn-default" type="submit"></input>
+			</form>
+		</div>
+	</body>
+</html>

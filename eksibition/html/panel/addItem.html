@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en" class="no-js">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<meta name="theme-color" content="#3e454c">
+	
+	<title>Eksibition - New Item</title>
+
+	<!-- Font awesome -->
+	<link rel="stylesheet" href="css/font-awesome.min.css">
+	<!-- Sandstone Bootstrap CSS -->
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<!-- Bootstrap Datatables -->
+	<link rel="stylesheet" href="css/dataTables.bootstrap.min.css">
+	<!-- Bootstrap social button library -->
+	<link rel="stylesheet" href="css/bootstrap-social.css">
+	<!-- Bootstrap select -->
+	<link rel="stylesheet" href="css/bootstrap-select.css">
+	<!-- Bootstrap file input -->
+	<link rel="stylesheet" href="css/fileinput.min.css">
+	<!-- Awesome Bootstrap checkbox -->
+	<link rel="stylesheet" href="css/awesome-bootstrap-checkbox.css">
+	<!-- Admin Stye -->
+	<link rel="stylesheet" href="css/style.css">
+
+	<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+	      #map {
+	        height: 500px;
+		    background-color: #CCC;
+		    margin-top: 20px;
+	      }
+	</style>
+
+</head>
+
+<body>
+	<div class="brand clearfix">
+		<a href="index.html" class="logo"><img src="img/logo.jpg" class="img-responsive" alt=""></a>
+		<span class="menu-btn"><i class="fa fa-bars"></i></span>
+		<ul class="ts-profile-nav">
+			<li class="ts-account">
+				<a href="#"><img src="img/ts-avatar.jpg" class="ts-avatar hidden-side" alt=""> Account <i class="fa fa-angle-down hidden-side"></i></a>
+				<ul>
+					<li><a href="#">My Account</a></li>
+					<li><a href="#">Edit Account</a></li>
+					<li><a href="#">Logout</a></li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+
+	<div class="ts-main-content">
+		<nav class="ts-sidebar">
+			<ul class="ts-sidebar-menu">
+				<li class="ts-label">Main</li>
+				<li class=""><a href="home"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+				<li class="open"><a href="itemList"><i class="fa fa-bars"></i> Items</a></li>
+				<li class=""><a href="user"><i class="fa fa-users"></i> Users</a></li>
+				<li class=""><a href="order"><i class="fa fa-sticky-note"></i> Orders</a></li>
+				<li class=""><a href="newsList"><i class="fa fa-newspaper-o"></i> News</a></li>
+
+				<!-- Account from above -->
+				<ul class="ts-profile-nav">
+					<li><a href="#">Help</a></li>
+					<li><a href="#">Settings</a></li>
+					<li class="ts-account">
+						<a href="#"><img src="img/ts-avatar.jpg" class="ts-avatar hidden-side" alt=""> Account <i class="fa fa-angle-down hidden-side"></i></a>
+						<ul>
+							<li><a href="#">My Account</a></li>
+							<li><a href="#">Edit Account</a></li>
+							<li><a href="#">Logout</a></li>
+						</ul>
+					</li>
+				</ul>
+
+			</ul>
+		</nav>
+		<div class="content-wrapper">
+			<div class="container-fluid">
+
+				<div class="row">
+					<div class="col-md-12">
+
+						<h2 class="page-title" id="pageTitle">Add New Items</h2>
+						<div id="mainContent">
+							<div class="container">
+								<form role="form" method="post" enctype="multipart/form-data" action="https://elvinjin.com:8081/api/item/new">
+								<div class="form-group">
+								  <label >Title:</label>
+								  <input type="text" class="form-control" name="title">
+								</div>
+								<div class="form-group">
+								  <label >Title(中文):</label>
+								  <input type="text" class="form-control" name="title_zh"></input>
+								</div>
+								<div class="form-group">
+								  <label >Author (If any):</label>
+								  <input type="text" class="form-control" name="author">
+								</div>
+								<div class="form-group">
+									<label>Cover Image:</label><br/>
+									<input type="file" accept="image/gif, image/jpeg, image/png" name="coverImage"></input>
+								</div>
+								<div class="form-group">
+									<label>More Images:</label><br/>
+									<input type="file" accept="image/gif, image/jpeg, image/png" name="album" multiple></input>
+								</div>
+								<div class="form-group">
+									<label>Soundtrack:</label><br/>
+									<input type="file" accept="audio/mpeg3" name="soundtrack" multiple></input>
+								</div>
+								<div class="form-group">
+									<label>Position:</label><br/>
+									<p>Drag the marker to the target position</p>
+									<div class="row	">
+										<div class="col-xs-2">
+										  <label for="lat">lat:</label>
+										  <input class="form-control" id="lat" type="text" name="lat" readonly>
+										</div>
+										<div class="col-xs-2">
+										  <label for="lng">lng:</label>
+										  <input class="form-control" id="lng" type="text" name="lng" readonly>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label>Map VIew:</label><br/>
+									<div class="container" id="map"></div>
+								</div>
+								<div class="form-group">
+								  <label >Description:</label>
+								  <textarea type="text" class="form-control" rows="8" name="description"></textarea>
+								</div>
+								<div class="form-group">
+								  <label >Description(中文):</label>
+								  <textarea type="text" class="form-control" rows="8" name="description_zh"></textarea>
+								</div>
+								<div class="form-group">
+								  <label >Beacon Information:</label><br/>
+								  <div class="row">
+										<div class="col-xs-4">
+										  <label for="lat">uuid:</label>
+										  <input class="form-control" name="uuid" type="text">
+										</div>
+										<div class="col-xs-3">
+										  <label for="lng">major:</label>
+										  <input class="form-control" name="major" type="text">
+										</div>
+										<div class="col-xs-3">
+										  <label for="lng">minor:</label>
+										  <input class="form-control" name="minor" type="text">
+										</div>
+									</div>
+								</div>
+								<input class="btn btn-default" type="submit"></input>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<!-- Loading Scripts -->
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap-select.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/jquery.dataTables.min.js"></script>
+	<script src="js/dataTables.bootstrap.min.js"></script>
+	<script src="js/Chart.min.js"></script>
+	<script src="js/fileinput.js"></script>
+	<script src="js/chartData.js"></script>
+	<script src="js/main.js"></script>
+	<script src="https://maps.googleapis.com/maps/api/js" async defer></script>
+	<script>
+	window.onload = function(){
+		initMap();
+	}
+
+	function initMap(){
+	  	var mapDiv = document.getElementById('map');
+		  	var myLatLng = {lat: 22.419066, lng: 114.207126};
+	        var map = new google.maps.Map(mapDiv, {
+	          center: {lat: 22.419066, lng: 114.207126},
+	          zoom: 16
+	        });
+	        var marker = new google.maps.Marker({
+			    position: myLatLng,
+			    map: map,
+			    draggable: true,
+			    title: 'Target'
+			});
+			var inputLat = document.getElementById('lat');
+			var inputLng = document.getElementById('lng');
+			inputLat.value = myLatLng.lat;
+			inputLng.value = myLatLng.lng;
+			marker.addListener('drag', function(){
+				inputLat.value = marker.getPosition().lat();
+				inputLng.value = marker.getPosition().lng();
+			});
+	  }
+
+	function jumpToLogin(){
+		window.location.replace('https://elvinjin.com:8081/panel/login');
+	}
+	</script>
+
+</body>
+
+</html>

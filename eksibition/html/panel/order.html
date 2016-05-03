@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en" class="no-js">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<meta name="theme-color" content="#3e454c">
+	
+	<title>Eksibition - Orders</title>
+
+	<!-- Font awesome -->
+	<link rel="stylesheet" href="css/font-awesome.min.css">
+	<!-- Sandstone Bootstrap CSS -->
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<!-- Bootstrap Datatables -->
+	<link rel="stylesheet" href="css/dataTables.bootstrap.min.css">
+	<!-- Bootstrap social button library -->
+	<link rel="stylesheet" href="css/bootstrap-social.css">
+	<!-- Bootstrap select -->
+	<link rel="stylesheet" href="css/bootstrap-select.css">
+	<!-- Bootstrap file input -->
+	<link rel="stylesheet" href="css/fileinput.min.css">
+	<!-- Awesome Bootstrap checkbox -->
+	<link rel="stylesheet" href="css/awesome-bootstrap-checkbox.css">
+	<!-- Admin Stye -->
+	<link rel="stylesheet" href="css/style.css">
+
+	<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+	<div class="brand clearfix">
+		<a href="index.html" class="logo"><img src="img/logo.jpg" class="img-responsive" alt=""></a>
+		<span class="menu-btn"><i class="fa fa-bars"></i></span>
+		<ul class="ts-profile-nav">
+			<li class="ts-account">
+				<a href="#"><img src="img/ts-avatar.jpg" class="ts-avatar hidden-side" alt=""> Account <i class="fa fa-angle-down hidden-side"></i></a>
+				<ul>
+					<li><a href="#">My Account</a></li>
+					<li><a href="#">Edit Account</a></li>
+					<li><a href="#">Logout</a></li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+
+	<div class="ts-main-content">
+		<nav class="ts-sidebar">
+			<ul class="ts-sidebar-menu">
+				<li class="ts-label">Main</li>
+				<li class=""><a href="home"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+				<li class=""><a href="itemList"><i class="fa fa-bars"></i> Items</a></li>
+				<li class=""><a href="user"><i class="fa fa-users"></i> Users</a></li>
+				<li class="open"><a href="order"><i class="fa fa-sticky-note"></i> Orders</a></li>
+				<li class=""><a href="newsList"><i class="fa fa-newspaper-o"></i> News</a></li>
+
+				<!-- Account from above -->
+				<ul class="ts-profile-nav">
+					<li><a href="#">Help</a></li>
+					<li><a href="#">Settings</a></li>
+					<li class="ts-account">
+						<a href="#"><img src="img/ts-avatar.jpg" class="ts-avatar hidden-side" alt=""> Account <i class="fa fa-angle-down hidden-side"></i></a>
+						<ul>
+							<li><a href="#">My Account</a></li>
+							<li><a href="#">Edit Account</a></li>
+							<li><a href="#">Logout</a></li>
+						</ul>
+					</li>
+				</ul>
+
+			</ul>
+		</nav>
+		<div class="content-wrapper">
+			<div class="container-fluid">
+
+				<div class="row">
+					<div class="col-md-12">
+
+						<h2 class="page-title" id="pageTitle">Orders</h2>
+						<div id="mainContent">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="panel panel-default">
+										<div class="panel-heading">All Orders</div>
+										<div class="panel-body">
+											<table class="table table-hover">
+												<thead>
+													<tr>
+														<th>#</th>
+														<th>Name</th>
+														<th>Email</th>
+														<th>Date</th>
+														<th>Ticket No.</th>
+													</tr>
+												</thead>
+												<tbody id="orderTableBody">
+													
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<!-- Loading Scripts -->
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap-select.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/jquery.dataTables.min.js"></script>
+	<script src="js/dataTables.bootstrap.min.js"></script>
+	<script src="js/Chart.min.js"></script>
+	<script src="js/fileinput.js"></script>
+	<script src="js/chartData.js"></script>
+	<script src="js/main.js"></script>
+	
+	<script>
+		
+	window.onload = function(){
+		loadOrder();
+	}
+
+	function loadOrder(){
+		$.post("https://elvinjin.com:8081/api/admin/allOrder",
+		    {
+		        accessToken: localStorage['eksibitionUserToken'],
+		        userId: localStorage['eksibitionUserId']
+		    },
+		    function(data, status){
+		    	console.log(data);
+		    	var tbody = document.getElementById('orderTableBody');
+		        	for(var i = 0; i < data.length; i++){
+		        		var tr = document.createElement('tr');
+		        		var th = document.createElement('th');
+		        		th.scope = "row";
+		        		th.innerHTML = i+1;
+		        		var name = document.createElement('td');
+		        		name.innerHTML = data[i].name;
+		        		var email = document.createElement('td');
+		        		email.innerHTML = data[i].email;
+		        		var date = document.createElement('td');
+		        		date.innerHTML = getDateString(data[i].date);
+		        		var id = document.createElement('td');
+		        		id.innerHTML = data[i].ticketId;
+		        		tr.appendChild(th);
+		        		tr.appendChild(name);
+		        		tr.appendChild(email);
+		        		tr.appendChild(date);
+		        		tr.appendChild(id);
+		        		tbody.appendChild(tr);
+		        	}
+			},
+			'json');
+	}
+
+	function jumpToLogin(){
+		window.location.replace('https://elvinjin.com:8081/panel/login');
+	}
+
+	function getDateString(date){
+		return date.substring(0,10);
+	}
+	</script>
+
+</body>
+
+</html>

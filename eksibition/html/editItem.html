@@ -1,0 +1,203 @@
+<html>
+	<head>
+	<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+		<script src="https://maps.googleapis.com/maps/api/js?callback=initMap" async defer></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<style>
+	      #map {
+	        height: 500px;
+		    background-color: #CCC;
+	      }
+	      #deleteButton{
+	      	position: absolute;
+		    left: 50px;
+		    top: 50px;
+		    visibility: 'hidden';
+	      }
+	      #imageContainer{
+	      	position: relative;
+	      }
+    	</style>
+    	<script>
+    	function getId(){
+    		var url = window.location.href;
+		    var ret = url.split('/');
+		    return ret[ret.length-1];
+		}
+		function initMap(){
+		  	var mapDiv = document.getElementById('map');
+		  	var myLatLng = {lat: 22.419066, lng: 114.207126};
+	        var map = new google.maps.Map(mapDiv, {
+	          center: {lat: 22.419066, lng: 114.207126},
+	          zoom: 16
+	        });
+	        var _id = getId();
+	        var xhr = new XMLHttpRequest();
+			xhr.onreadystatechange = function() {
+			    if (xhr.readyState == XMLHttpRequest.DONE) {
+			    	// console.log(JSON.parse(xhr.response));
+			    	var item = JSON.parse(xhr.response);
+			        updatePage(map, item);
+			    }
+			}
+			xhr.open('GET', 'https://elvinjin.com:8081/api/item/' + _id, true);
+			xhr.send();
+		  }
+		function updatePage(map, item){
+			var _id = item._id;
+			var myLatLng = {lat: item.lat, lng: item.lng};
+			var title = item.title;
+			var author = item.author;
+			var description = item.description;
+			var uuid = item.beaconUUID;
+			var major = item.beaconMajor;
+			var minor = item.beaconMinor;
+			var coverImageSrc = "https://elvinjin.com:8081" + item.coverImage;
+			var gallery = item.images;
+			var _idInput = document.getElementById('_id');
+			var titleInput = document.getElementById('title');
+			var authorInput = document.getElementById('author');
+			var descriptionInput = document.getElementById('description');
+			var uuidInput = document.getElementById('uuid');
+			var majorInput = document.getElementById('major');
+			var minorInput = document.getElementById('minor');
+			var coverImage = document.getElementById('coverImage');
+			var galleryDiv = document.getElementById('gallery');
+			_idInput.value = _id;
+			titleInput.value = title;
+			authorInput.value = author;
+			descriptionInput.value = description;
+			uuidInput.value = uuid;
+			majorInput.value = major;
+			minorInput.value = minor;
+			coverImage.src = coverImageSrc;
+			for(var i = 0; i < gallery.length; i++){
+				var record = gallery[i];
+				gallery[i] = "https://elvinjin.com:8081" + gallery[i];
+				//
+				var moreImg = document.createElement('img');
+				moreImg.className = "img-rounded";
+				moreImg.width = 304;
+				moreImg.height = 236;
+				moreImg.src = gallery[i];
+				var imageContainer = document.createElement('div');
+				imageContainer.appendChild(moreImg);
+				// imageContainer.innerHTML += '<label class="checkbox-inline"><input type="checkbox" value="" name=> Delete?</label>';
+				var label = document.createElement('label');
+				var checkbox = document.createElement('input');
+				var hiddenCheckbox = document.createElement('input');
+				label.className = "checkbox-inline";
+				checkbox.type = "checkbox";
+				checkbox.name = "delete";
+				hiddenCheckbox.type = "hidden";
+				hiddenCheckbox.name = "delete";
+				hiddenCheckbox.value = "off";
+				label.appendChild(checkbox);
+				label.appendChild(hiddenCheckbox);
+				label.innerHTML += "Delete?";
+				imageContainer.appendChild(label);
+				galleryDiv.appendChild(imageContainer);
+			}
+		  	var marker = new google.maps.Marker({
+			    position: myLatLng,
+			    map: map,
+			    draggable: true,
+			    title: 'Target'
+			});
+			var inputLat = document.getElementById('lat');
+			var inputLng = document.getElementById('lng');
+			inputLat.value = myLatLng.lat;
+			inputLng.value = myLatLng.lng;
+			marker.addListener('drag', function(){
+				inputLat.value = marker.getPosition().lat();
+				inputLng.value = marker.getPosition().lng();
+			});
+			//
+		  }
+		  function redirectBack(){
+			window.location.href = "https://elvinjin.com:8081/itemList";
+		  }
+		</script>
+	</head>
+
+	<body>
+		<div class="container">
+			<h2>Edit Exsited Item Infomation</h2>
+			<form role="form" method="post" enctype="multipart/form-data" action="https://elvinjin.com:8081/api/item/edit" onsubmit="redirectBack();">
+		    <input type="hidden" name="redirect" value="https://elvinjin.com:8081/itemList" />
+			<div class="form-group">
+			  <label >id:</label>
+			  <input type="text" class="form-control" name="_id" id="_id" readonly>
+			</div>
+			<div class="form-group">
+			  <label >Title:</label>
+			  <input type="text" class="form-control" name="title" id="title">
+			</div>
+			<div class="form-group">
+			  <label >Author (If any):</label>
+			  <input type="text" class="form-control" name="author" id="author">
+			</div>
+			<div class="form-group">
+				<label>Cover Image:</label><br/>
+				<img class="img-rounded" width="304" height="236" id="coverImage"></img>
+				<p>Change the cover image:</p>
+				<input type="file" accept="image/gif, image/jpeg, image/png" name="coverImage"></input>
+			</div>
+			<div class="form-group">
+				<label>More Images:</label><br/>
+				<div class="row" id="gallery"></div>
+				<input type="file" accept="image/gif, image/jpeg, image/png" name="album" multiple></input>
+			</div>
+			<div class="form-group">
+				<label>Soundtrack:</label><br/>
+				<input type="file" accept="audio/mpeg3" name="soundtrack" multiple></input>
+			</div>
+			<div class="form-group">
+				<label>Position:</label><br/>
+				<p>Drag the marker to the target position</p>
+				<div class="row	">
+					<div class="col-xs-2">
+					  <label for="lat">lat:</label>
+					  <input class="form-control" id="lat" type="text" name="lat" readonly>
+					</div>
+					<div class="col-xs-2">
+					  <label for="lng">lng:</label>
+					  <input class="form-control" id="lng" type="text" name="lng" readonly>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label>Map VIew:</label><br/>
+				<div class="container" id="map"></div>
+			</div>
+			<div class="form-group">
+			  <label >Description:</label>
+			  <textarea type="text" class="form-control" rows="8" name="description" id="description"></textarea>
+			</div>
+			<div class="form-group">
+			  <label >Beacon Information:</label><br/>
+			  <div class="row">
+					<div class="col-xs-4">
+					  <label for="lat">uuid:</label>
+					  <input class="form-control" name="uuid" type="text" id="uuid">
+					</div>
+					<div class="col-xs-3">
+					  <label for="lng">major:</label>
+					  <input class="form-control" name="major" type="text" id="major">
+					</div>
+					<div class="col-xs-3">
+					  <label for="lng">minor:</label>
+					  <input class="form-control" name="minor" type="text" id="minor">
+					</div>
+				</div>
+			</div>
+			<input class="btn btn-default" type="submit" id="submitButton"></input>
+			</form>
+		</div>
+	</body>
+</html>

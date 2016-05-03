@@ -1,0 +1,75 @@
+<html>
+	<head>
+	<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<style type="text/css">
+		</style>
+	</head>
+	<script type="text/javascript">
+	window.onload = function(){
+		var newsContainer = document.getElementById("newsContainer");
+		var xhr = new XMLHttpRequest();
+		xhr.onreadystatechange = function() {
+		    if (xhr.readyState == XMLHttpRequest.DONE) {
+		    	// console.log(JSON.parse(xhr.response));
+		    	var news = JSON.parse(xhr.response);
+		        updateNews(newsContainer, news);
+		    }
+		}
+		var newsId = getNewsId();
+		xhr.open('GET', 'https://elvinjin.com:8081/api/news/' + newsId, true);
+		xhr.send();
+	};
+	function updateNews(container, news){
+		var title = document.createElement('h1');
+		title.innerHTML = news.title;
+		var image = document.createElement('img');
+		image.src = 'https://elvinjin.com:8081' + news.image;
+
+		container.appendChild(title);
+		container.appendChild(image);
+		parseContent(container, news.content);
+	}
+	
+	function getNewsId(){
+		var url = window.location.href;
+		var tmp = url.split('/');
+		return tmp[tmp.length-1];
+	}
+	function parseContent(container, raw){
+		var tmp = raw.split('\r\n');
+		for(var i = 0; i < tmp.length; i++){
+			var part = document.createElement('p');
+			part.className = 'lead';
+			part.innerHTML = tmp[i];
+			container.appendChild(part);
+		}
+		var button = document.createElement('button');
+		button.className = 'btn btn-default btn-lg';
+		button.innerHTML = "Push Now";
+		button.onclick = function(){
+			var newsId = getNewsId();
+			var xhr = new XMLHttpRequest();
+			xhr.onreadystatechange = function() {
+			    if (xhr.readyState == XMLHttpRequest.DONE) {
+			    	if (confirm('This News Pushed!')) {
+			      		window.location = "https://elvinjin.com:8081/newsList"
+					}
+			    }
+			}
+			xhr.open('POST', 'https://elvinjin.com:8081/pushAll/' + newsId, true);
+			xhr.send();
+		}
+		container.appendChild(button);
+	}
+	</script>
+	<body>
+	<div class="container" id="newsContainer">
+	<div/>
+	</body>
+</html>

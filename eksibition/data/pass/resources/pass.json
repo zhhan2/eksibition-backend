@@ -1,0 +1,52 @@
+{
+  "formatVersion" : 1,
+  "passTypeIdentifier" : "pass.com.elvinjin.Eksibition",
+  "serialNumber" : "nmyuxdosfgna",
+  "teamIdentifier" : "HP634A2CZK",
+  "barcode" : {
+    "message" : "nmyuxofgna",
+    "format" : "PKBarcodeFormatPDF417",
+    "messageEncoding" : "iso-8859-1"
+  },
+  "organizationName" : "Eksibition Team",
+  "description" : "CUHK Museum 1-Day Pass",
+  "foregroundColor" : "rgb(255, 255, 255)",
+  "backgroundColor" : "rgb(60, 65, 76)",
+  "labelColor": "rgb(177, 189, 213)",
+  "eventTicket" : {
+    "headerFields" : [
+      {
+        "dateStyle" : "PKDateStyleMedium",
+        "key" : "valid_from",
+        "label" : "Valid From",
+        "value" : "2015-12-10T19:30-06:00"
+      }
+    ],
+    "primaryFields" : [
+      {
+        "key" : "event",
+        "label" : "EVENT",
+        "value" : "Paintings by CUHK Students"
+      }
+    ],
+    "secondaryFields" : [
+        {
+          "key" : "loc",
+          "label" : "LOCATION",
+          "value" : "SHB 611, CUHK"
+        }, 
+        {
+          "key" : "ticket_type",
+          "label" : "Ticket Type",
+          "value" : "1-Day Pass"
+        },
+        {
+            "isRelative" : true,
+            "key" : "doors-open",
+            "label" : "Doors Open",
+            "timeStyle" : "PKDateStyleShort",
+            "value" : "2015-12-10T19:30-06:00"
+        }
+      ]
+    }
+}
