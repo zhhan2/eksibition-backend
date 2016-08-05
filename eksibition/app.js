@@ -276,33 +276,33 @@ app.get('/panel/editItem', function(req, res){
     });
 });
 
-app.get('/panel/user', function(req, res){
-  fs.readFile("./html/panel/user.html", function(err, text){
-      res.setHeader("Content-Type", "text/html");
-      res.end(text);
-    });
-});
+// app.get('/panel/user', function(req, res){
+//   fs.readFile("./html/panel/user.html", function(err, text){
+//       res.setHeader("Content-Type", "text/html");
+//       res.end(text);
+//     });
+// });
 
-app.get('/panel/order', function(req, res){
-  fs.readFile("./html/panel/order.html", function(err, text){
-      res.setHeader("Content-Type", "text/html");
-      res.end(text);
-    });
-});
+// app.get('/panel/order', function(req, res){
+//   fs.readFile("./html/panel/order.html", function(err, text){
+//       res.setHeader("Content-Type", "text/html");
+//       res.end(text);
+//     });
+// });
 
-app.get('/panel/newsList', function(req, res){
-  fs.readFile("./html/panel/newsList.html", function(err, text){
-      res.setHeader("Content-Type", "text/html");
-      res.end(text);
-    });
-});
+// app.get('/panel/newsList', function(req, res){
+//   fs.readFile("./html/panel/newsList.html", function(err, text){
+//       res.setHeader("Content-Type", "text/html");
+//       res.end(text);
+//     });
+// });
 
-app.get('/panel/addNews', function(req, res){
-  fs.readFile("./html/panel/addNews.html", function(err, text){
-      res.setHeader("Content-Type", "text/html");
-      res.end(text);
-    });
-});
+// app.get('/panel/addNews', function(req, res){
+//   fs.readFile("./html/panel/addNews.html", function(err, text){
+//       res.setHeader("Content-Type", "text/html");
+//       res.end(text);
+//     });
+// });
 
 // =================================================================
 // start the server ================================================
